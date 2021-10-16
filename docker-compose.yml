@@ -8,5 +8,6 @@ services:
     restart: always
     environment:
       MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: userservice
     ports:
       - 3306:3306
