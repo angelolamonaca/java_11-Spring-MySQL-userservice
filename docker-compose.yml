@@ -25,7 +25,7 @@ services:
     depends_on:
       - db
     environment:
-      SECRET: akatsuki
+      secret: akatsuki
       SPRING_DATASOURCE_URL: jdbc:mysql://mysql-db:3306/userservice?createDatabaseIfNotExist=true
       SPRING_DATASOURCE_USERNAME: root
       SPRING_DATASOURCE_PASSWORD: root
