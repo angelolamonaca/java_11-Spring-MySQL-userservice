@@ -1,8 +1,10 @@
 package com.angelolamonaca.userservice.api;
 
-import com.angelolamonaca.userservice.domain.PasswordConstraintValidator;
+import com.angelolamonaca.userservice.domain.RoleType;
 import com.angelolamonaca.userservice.domain.User;
+import com.angelolamonaca.userservice.service.RoleService;
 import com.angelolamonaca.userservice.service.UserService;
+import com.angelolamonaca.userservice.utility.PasswordValidator;
 import com.auth0.jwt.interfaces.DecodedJWT;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
@@ -35,19 +37,22 @@ import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 @RequiredArgsConstructor
 public class AuthController {
     private final UserService userService;
+    private final RoleService roleService;
 
     @PostMapping("/register")
     public ResponseEntity<?> register(@RequestBody User user) {
-        List<String> passwordValidationResult = new PasswordConstraintValidator().validate(user.getPassword());
+        List<String> passwordValidationResult = new PasswordValidator().validate(user.getPassword());
         if (!passwordValidationResult.isEmpty()) {
             return ResponseEntity
                     .badRequest()
                     .body(passwordValidationResult);
         }
         URI uri = URI.create(ServletUriComponentsBuilder.fromCurrentContextPath().path("/api/user/save").toUriString());
+        User newUser = userService.saveUser(user);
+        roleService.addRoleToUser(user.getUsername(), RoleType.ROLE_USER.name());
         return ResponseEntity
                 .created(uri)
-                .body(userService.saveUser(user));
+                .body(newUser);
     }
 
     @GetMapping("/refreshtoken")
