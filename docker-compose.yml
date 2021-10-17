@@ -21,7 +21,7 @@ services:
     restart: on-failure
     build:
       context: .
-      dockerfile: dockerfiles/Dockerfile
+      dockerfile: dockerfiles/app.Dockerfile
     depends_on:
       - db
     environment:
