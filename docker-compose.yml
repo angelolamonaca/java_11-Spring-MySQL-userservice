@@ -1,9 +1,10 @@
-version: '3.1'
+version: '3.8'
 
 services:
 
   db:
-    image: mysql
+    image: mysql:latest
+    container_name: mysql-db
     command: --default-authentication-plugin=mysql_native_password
     restart: always
     environment:
@@ -11,3 +12,28 @@ services:
       MYSQL_DATABASE: userservice
     ports:
       - 3306:3306
+    networks:
+      - spring-cloud-network
+
+  auth-server:
+    image: auth-server:latest
+    container_name: auth-server
+    restart: on-failure
+    build:
+      context: .
+      dockerfile: dockerfiles/Dockerfile
+    depends_on:
+      - db
+    environment:
+      SECRET: akatsuki
+      SPRING_DATASOURCE_URL: jdbc:mysql://mysql-db:3306/userservice?createDatabaseIfNotExist=true
+      SPRING_DATASOURCE_USERNAME: root
+      SPRING_DATASOURCE_PASSWORD: root
+    ports:
+      - 8080:8080
+    networks:
+      - spring-cloud-network
+
+networks:
+  spring-cloud-network:
+    driver: bridge
