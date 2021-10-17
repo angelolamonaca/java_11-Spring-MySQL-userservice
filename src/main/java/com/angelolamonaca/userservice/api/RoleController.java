@@ -29,15 +29,15 @@ public class RoleController {
         return ResponseEntity.ok(roleService.getRoles());
     }
 
-    @PostMapping("/role/save")
-    public ResponseEntity<Role> saveUser(@RequestBody Role role) {
+    @PostMapping("/create")
+    public ResponseEntity<Role> createRole(@RequestBody Role role) {
         URI uri = URI.create(ServletUriComponentsBuilder.fromCurrentContextPath().path("/api/role/save").toUriString());
         return ResponseEntity.created(uri).body(roleService.saveRole(role));
     }
 
-    @PostMapping("/role/assign")
+    @PostMapping("/assign")
     public ResponseEntity<?> addRoleToUser(@RequestBody RoleToUserForm form) {
-        roleService.addRoleToUser(form.getUsername(), form.getRoleName());
+        roleService.addRoleToUser(form.getUsername(), form.getRolename());
         return ResponseEntity.ok().build();
     }
 }
@@ -45,5 +45,5 @@ public class RoleController {
 @Data
 class RoleToUserForm {
     private String username;
-    private String roleName;
+    private String rolename;
 }

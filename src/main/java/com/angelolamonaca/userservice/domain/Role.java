@@ -4,10 +4,8 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
+import javax.validation.constraints.NotBlank;
 
 /**
  * @author Angelo Lamonaca (https://www.angelolamonaca.com/)
@@ -20,6 +18,10 @@ import javax.persistence.Id;
 @AllArgsConstructor
 public class Role {
     @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
+
+    @Column(unique = true)
+    @NotBlank
     private String name;
 }
